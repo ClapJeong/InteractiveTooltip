@@ -123,8 +123,8 @@ GameObject:
   - component: {fileID: 4064088556727867804}
   - component: {fileID: 7476908706638749837}
   - component: {fileID: 4031235640160547599}
-  - component: {fileID: 1558310630204609395}
-  - component: {fileID: 723258888817577378}
+  - component: {fileID: 6715055180738551888}
+  - component: {fileID: 6390589034605282981}
   m_Layer: 5
   m_Name: TextPanel
   m_TagString: Untagged
@@ -152,7 +152,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 68.05, y: 140.22}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7476908706638749837
 CanvasRenderer:
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!114 &1558310630204609395
+--- !u!114 &6715055180738551888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -197,16 +197,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 521551336573425592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4da5803cf91eba741826581dfbc935f2, type: 3}
+  m_Script: {fileID: 11500000, guid: fd963cea7fcd2e64cae06cf8503ab14d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outLine: {fileID: 5874495846671799448}
-  fillImage: {fileID: 3876936163217436880}
-  manualSizeFittter: {fileID: 723258888817577378}
-  anchorState: 0
-  deapth: 0
-  prevWordIndex: -1
---- !u!114 &723258888817577378
+  defaultKey: Default0
+  rectTransform: {fileID: 4064088556727867804}
+  textMeshProUGUI: {fileID: 2227749643699862252}
+--- !u!114 &6390589034605282981
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -215,11 +212,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 521551336573425592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddd1b170ffca79040b2b5ac6f588311c, type: 3}
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fitHorizontal: 1
-  fitVertical: 1
+  m_HorizontalFit: 2
+  m_VerticalFit: 2
 --- !u!1 &4343098379006207298
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,8 +228,7 @@ GameObject:
   - component: {fileID: 2149128542799049159}
   - component: {fileID: 8656162601607471925}
   - component: {fileID: 2227749643699862252}
-  - component: {fileID: 5081459751047571121}
-  - component: {fileID: 7687340804378309798}
+  - component: {fileID: 1808078605342238075}
   m_Layer: 5
   m_Name: PanelText
   m_TagString: Untagged
@@ -254,10 +250,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4064088556727867804}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 354.14, y: 40.22}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 69.05, y: -70.11}
+  m_SizeDelta: {x: 38.1, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8656162601607471925
 CanvasRenderer:
@@ -358,7 +354,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5081459751047571121
+--- !u!114 &1808078605342238075
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -367,26 +363,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4343098379006207298}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 101ceec2a6903ae43844f5d222a5ea35, type: 3}
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rect: {fileID: 2149128542799049159}
-  manualSizeFittter: {fileID: 7687340804378309798}
-  pointingState: 0
---- !u!114 &7687340804378309798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4343098379006207298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddd1b170ffca79040b2b5ac6f588311c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fitHorizontal: 1
-  fitVertical: 1
+  m_HorizontalFit: 2
+  m_VerticalFit: 2
 --- !u!1 &8267963484793048218
 GameObject:
   m_ObjectHideFlags: 0
