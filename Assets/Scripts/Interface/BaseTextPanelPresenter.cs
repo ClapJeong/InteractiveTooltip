@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 
 public class BaseTextPanelPresenter : ITextPanelPresenter
@@ -8,13 +9,27 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
     private ITextPanelView view;
     private TextPanelModel model;
 
-    public async UniTask InitializeAsync(ITextPanelView iView, Transform root, string text, int depth)
+    private UnityAction<ITextPanelPresenter> onPanelEnter;
+    private UnityAction<ITextPanelPresenter> onPanelExit;
+
+    public async UniTask InitializeAsync(
+        ITextPanelView iView,
+        Transform root,
+        string key,
+        string text,
+        int depth,
+        UnityAction<ITextPanelPresenter> onPanelEnter,
+        UnityAction<ITextPanelPresenter> onPanelExit)
     {
+        this.onPanelEnter = onPanelEnter;
+        this.onPanelExit = onPanelExit;
         this.view = iView;
-        model = new TextPanelModel(text, depth);
+        model = new TextPanelModel(key, text, depth);
         view.GetTMP().text = text;
         view.GetRectTransform().SetParent(root);
         view.GetRectTransform().gameObject.SetActive(true);
+        view.SubscribeOnPanelEnter(OnPanelEnter);
+        view.SubscribeOnPanelExit(OnPanelExit);
         await UniTask.CompletedTask;
     }
 
@@ -54,4 +69,18 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
 
     public void SetAnchorState(TextPanelAnchorState anchorState)
         => model.SetAnchorState(anchorState);
+
+    public void OnPanelEnter(ITextPanelView view)
+        => onPanelEnter?.Invoke(this);
+
+    public void OnPanelExit(ITextPanelView view)
+        => onPanelExit?.Invoke(this);
+
+    public void OnAnchorProgress(float normalizedValue)
+    {
+        view.GetProgressImage().fillAmount = normalizedValue;
+    }
+
+    public bool IsSameLink(string key)
+        => model.key == key;
 }

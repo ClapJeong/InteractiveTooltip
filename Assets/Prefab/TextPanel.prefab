@@ -203,6 +203,7 @@ MonoBehaviour:
   defaultKey: Default0
   rectTransform: {fileID: 4064088556727867804}
   textMeshProUGUI: {fileID: 2227749643699862252}
+  progressImage: {fileID: 3876936163217436880}
 --- !u!114 &6390589034605282981
 MonoBehaviour:
   m_ObjectHideFlags: 0
