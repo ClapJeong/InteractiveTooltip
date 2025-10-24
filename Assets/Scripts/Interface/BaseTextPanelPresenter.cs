@@ -14,9 +14,7 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
 
     public async UniTask InitializeAsync(
         ITextPanelView iView,
-        Transform root,
-        string key,
-        string text,
+        LinkData linkData,
         int depth,
         UnityAction<ITextPanelPresenter> onPanelEnter,
         UnityAction<ITextPanelPresenter> onPanelExit)
@@ -24,10 +22,9 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
         this.onPanelEnter = onPanelEnter;
         this.onPanelExit = onPanelExit;
         this.view = iView;
-        model = new TextPanelModel(key, text, depth);
-        view.GetTMP().text = text;
-        view.GetRectTransform().SetParent(root);
-        view.GetRectTransform().gameObject.SetActive(true);
+        model = new TextPanelModel(linkData.Key, linkData.Description, depth);
+        view.SetText(linkData.Description);
+        view.SetActive(true);
         view.SubscribeOnPanelEnter(OnPanelEnter);
         view.SubscribeOnPanelExit(OnPanelExit);
         await UniTask.CompletedTask;
@@ -36,33 +33,13 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
     public int GetDepth()
         => model.depth;
 
-    public TextMeshProUGUI GetTMP()
-        => view.GetTMP();
-
-    public RectTransform GetRectTransform()
-        => view.GetRectTransform();
-
-    public void Release(Transform deactiveRoot)
+    public void Release()
     {
-        view.GetRectTransform().SetParent(deactiveRoot);
-        view.GetRectTransform().gameObject.SetActive(false);
+        view.SetActive(false);
     }
 
     public bool TryGetPointingLink(Vector2 mousePosition, out TMP_LinkInfo linkInfo)
-    {
-        var tmp = view.GetTMP();
-        var linkIndex = TMP_TextUtilities.FindIntersectingLink(tmp, mousePosition, null);
-        if (linkIndex != -1)
-        {
-            linkInfo = tmp.textInfo.linkInfo[linkIndex];
-            return true;
-        }
-        else
-        {
-            linkInfo = new TMP_LinkInfo();
-            return false;
-        }
-    }
+        => view.TryGetPointingLink(mousePosition, out linkInfo);
 
     public TextPanelAnchorState GetAnchorState()
         => model.AnchorState;
@@ -76,11 +53,27 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
     public void OnPanelExit(ITextPanelView view)
         => onPanelExit?.Invoke(this);
 
-    public void OnAnchorProgress(float normalizedValue)
-    {
-        view.GetProgressImage().fillAmount = normalizedValue;
-    }
-
     public bool IsSameLink(string key)
         => model.key == key;
+
+    public void SetPosition(Vector2 position)
+        => view.SetPosition(position);
+
+    public void SetPivot(Vector2 pivot)
+        => view.SetPivot(pivot);
+
+    public void SetRoot(Transform root)
+        => view.SetRoot(root);
+
+    public void SetText(string text)
+        => view.SetText(text);
+
+    public void OnAnchorProgress(float normalizedValue)
+        => view.SetAnchoringProgress(normalizedValue);
+
+    public void RefreshRectTransform()
+        => view.RefreshRectTransform();
+
+    public Vector2 GetLinkScreenPosition(TMP_LinkInfo linkInfo, TextDirection direction)
+        => view.GetLinkScreenPosition(linkInfo, direction);
 }

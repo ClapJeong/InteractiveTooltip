@@ -9,23 +9,38 @@ public enum TextDirection
     Down,
 }
 
-public interface ITextPanelPresenter
+public interface ITextPanelLinkAcceser
+{
+    public bool TryGetPointingLink(Vector2 mousePosition, out TMP_LinkInfo linkInfo);
+    public Vector2 GetLinkScreenPosition(TMP_LinkInfo linkInfo, TextDirection direction);
+}
+
+public interface ITextPanelDisplayController
+{
+    public void SetText(string text);
+
+    public void SetPosition(Vector2 position);
+
+    public void SetPivot(Vector2 anchor);
+
+    public void RefreshRectTransform();
+
+    public void OnAnchorProgress(float normalizedValue);
+}
+
+public interface ITextPanelPresenter : ITextPanelLinkAcceser, ITextPanelDisplayController
 {
     public UniTask InitializeAsync(
         ITextPanelView iView,
-        Transform root,
-        string key,
-        string text,
+        LinkData linkData,
         int depth,
         UnityAction<ITextPanelPresenter> onPanelEnter,
         UnityAction<ITextPanelPresenter> onPanelExit);
 
-    public void Release(Transform deactiveRoot);
+    public void Release();
 
     #region [ View ]
-    public RectTransform GetRectTransform();
-
-    public TextMeshProUGUI GetTMP();
+    public void SetRoot(Transform root);
 
     public void OnPanelEnter(ITextPanelView view);
 
@@ -33,16 +48,13 @@ public interface ITextPanelPresenter
     #endregion
 
     #region [ Model ]
-    public int GetDepth();
 
     public TextPanelAnchorState GetAnchorState();
 
     public void SetAnchorState(TextPanelAnchorState anchorState);
 
-    public void OnAnchorProgress(float normalizedValue);
+    public int GetDepth();
     #endregion
 
     public bool IsSameLink(string key);
-
-    public bool TryGetPointingLink(Vector2 mousePosition, out TMP_LinkInfo linkInfo);
 }

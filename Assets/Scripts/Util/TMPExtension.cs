@@ -34,4 +34,34 @@ public static class TMPExtension
 
         return screenPosition;
     }
+
+    public static Vector2 GetLinkScreenPosition(this TextMeshProUGUI tmp, TMP_LinkInfo linkInfo, TextDirection direction)
+    {
+        var charInfos = tmp.textInfo.characterInfo;
+        int start = linkInfo.linkTextfirstCharacterIndex;
+        int end = start + linkInfo.linkTextLength - 1;
+
+        var visibleChars = new List<TMP_CharacterInfo>();
+        for (int i = start; i <= end; i++)
+        {
+            if (i < 0 || i >= charInfos.Length) continue;
+            if (charInfos[i].isVisible)
+                visibleChars.Add(charInfos[i]);
+        }
+
+        if (visibleChars.Count == 0)
+            return Vector2.zero;
+
+        float xMid = (visibleChars.First().bottomLeft.x + visibleChars.Last().topRight.x) * 0.5f;
+        float y = direction switch
+        {
+            TextDirection.Up => visibleChars.Max(c => c.topLeft.y),
+            TextDirection.Down => visibleChars.Min(c => c.bottomLeft.y),
+            _ => throw new System.NotImplementedException()
+        };
+
+        Vector3 localPos = new Vector3(xMid, y, 0);
+        Vector3 worldPos = tmp.transform.TransformPoint(localPos);
+        return RectTransformUtility.WorldToScreenPoint(null, worldPos);
+    }
 }

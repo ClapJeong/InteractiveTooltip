@@ -41,6 +41,7 @@ public class TextPanelTimer
 
     public void CancelTimer(ITextPanelPresenter presenter)
     {
+        Debug.Log($"{Time.frameCount} cancel");
         workingTimers[presenter].Dispose();
     }
 
