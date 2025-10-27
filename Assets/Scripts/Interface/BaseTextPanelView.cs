@@ -11,9 +11,10 @@ public class BaseTextPanelView : MonoBehaviour, ITextPanelView
     [SerializeField] private RectTransform rectTransform;
     [SerializeField] private TextMeshProUGUI textMeshProUGUI;
     [SerializeField] private Image progressImage;
+    private ITextPanelPresenter presenter;
 
-    public UnityAction<ITextPanelView> onPanelEnter;
-    public UnityAction<ITextPanelView> onPanelExit;
+    public UnityAction<ITextPanelPresenter> onPanelEnter;
+    public UnityAction<ITextPanelPresenter> onPanelExit;
 
     public void SetRoot(Transform root)
         => rectTransform.SetParent(root);
@@ -25,22 +26,10 @@ public class BaseTextPanelView : MonoBehaviour, ITextPanelView
         => progressImage.fillAmount = normalizedValue;
 
     public void OnPointerEnter(PointerEventData eventData)
-        => onPanelEnter?.Invoke(this);
+        => onPanelEnter?.Invoke(presenter);
 
     public void OnPointerExit(PointerEventData eventData)
-        => onPanelExit?.Invoke(this);
-
-    public void SubscribeOnPanelEnter(UnityAction<ITextPanelView> onPanelEnter)
-    {
-        this.onPanelEnter -= onPanelEnter;
-        this.onPanelEnter += onPanelEnter;
-    }
-
-    public void SubscribeOnPanelExit(UnityAction<ITextPanelView> onPanelExit)
-    {
-        this.onPanelExit -= onPanelExit;
-        this.onPanelExit += onPanelExit;
-    }
+        => onPanelExit?.Invoke(presenter);
 
     public void SetActive(bool active)
         => gameObject.SetActive(active);
@@ -65,4 +54,21 @@ public class BaseTextPanelView : MonoBehaviour, ITextPanelView
 
     public void SetPivot(Vector2 pivot)
         => rectTransform.pivot = pivot;
+
+    public void Initialize(ITextPanelPresenter presenter)
+    {
+        this.presenter = presenter;
+    }
+
+    public void SubscribeOnEnter(UnityAction<ITextPanelPresenter> onEnter)
+    {
+        this.onPanelEnter -= onPanelEnter;
+        this.onPanelEnter += onPanelEnter;
+    }
+
+    public void SubscribeOnExit(UnityAction<ITextPanelPresenter> onExit)
+    {
+        this.onPanelExit -= onPanelExit;
+        this.onPanelExit += onPanelExit;
+    }
 }

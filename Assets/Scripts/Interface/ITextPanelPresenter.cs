@@ -29,22 +29,21 @@ public interface ITextPanelDisplayController
     public void OnAnchorProgress(float normalizedValue);
 }
 
-public interface ITextPanelPresenter : ITextPanelLinkAcceser, ITextPanelDisplayController
+public interface IPointerSubscriber<T>
 {
-    public UniTask InitializeAsync(
-        ITextPanelView iView,
-        TextPanelModel model,
-        UnityAction<ITextPanelPresenter> onPanelEnter,
-        UnityAction<ITextPanelPresenter> onPanelExit);
+    public void SubscribeOnEnter(UnityAction<T> onEnter);
+
+    public void SubscribeOnExit(UnityAction<T> onExit);
+}
+
+public interface ITextPanelPresenter : ITextPanelLinkAcceser, ITextPanelDisplayController, IPointerSubscriber<ITextPanelPresenter>
+{
+    public UniTask InitializeAsync(ITextPanelView iView, TextPanelModel model);
 
     public void Release();
 
     #region [ View ]
     public void SetRoot(Transform root);
-
-    public void OnPanelEnter(ITextPanelView view);
-
-    public void OnPanelExit(ITextPanelView view);
     #endregion
 
     #region [ Model ]

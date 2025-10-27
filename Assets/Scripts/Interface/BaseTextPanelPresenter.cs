@@ -9,24 +9,13 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
     private ITextPanelView view;
     private TextPanelModel model;
 
-    private UnityAction<ITextPanelPresenter> onPanelEnter;
-    private UnityAction<ITextPanelPresenter> onPanelExit;
-
-    public async UniTask InitializeAsync(
-        ITextPanelView iView,
-        TextPanelModel model,
-        UnityAction<ITextPanelPresenter> onPanelEnter,
-        UnityAction<ITextPanelPresenter> onPanelExit)
+    public async UniTask InitializeAsync(ITextPanelView iView, TextPanelModel model)
     {
-        this.onPanelEnter = onPanelEnter;
-        this.onPanelExit = onPanelExit;
-
         this.model = model;
         this.view = iView;
+        view.Initialize(this);
         view.SetText(model.text);
         view.SetActive(true);
-        view.SubscribeOnPanelEnter(OnPanelEnter);
-        view.SubscribeOnPanelExit(OnPanelExit);
         await UniTask.CompletedTask;
     }
 
@@ -34,9 +23,7 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
         => model.depth;
 
     public void Release()
-    {
-        view.SetActive(false);
-    }
+        => view.SetActive(false);
 
     public bool TryGetPointingLink(Vector2 mousePosition, out TMP_LinkInfo linkInfo)
         => view.TryGetPointingLink(mousePosition, out linkInfo);
@@ -46,12 +33,6 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
 
     public void SetAnchorState(TextPanelAnchorState anchorState)
         => model.SetAnchorState(anchorState);
-
-    public void OnPanelEnter(ITextPanelView view)
-        => onPanelEnter?.Invoke(this);
-
-    public void OnPanelExit(ITextPanelView view)
-        => onPanelExit?.Invoke(this);
 
     public bool IsSameLink(LinkData linkData)
         => model.key == linkData.Key;
@@ -76,4 +57,10 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
 
     public Vector2 GetLinkScreenPosition(TMP_LinkInfo linkInfo, TextDirection direction)
         => view.GetLinkScreenPosition(linkInfo, direction);
+
+    public void SubscribeOnEnter(UnityAction<ITextPanelPresenter> onEnter)
+        => view.SubscribeOnEnter(onEnter);
+
+    public void SubscribeOnExit(UnityAction<ITextPanelPresenter> onExit)
+        => view.SubscribeOnExit(onExit);
 }

@@ -44,11 +44,9 @@ public class TextPanelFactory
     {
         var model = new TextPanelModel(linkData, depth);
         var presenter = new BaseTextPanelPresenter();
-        await presenter.InitializeAsync(
-            view,
-            model,
-            onTextPanelEnter,
-            onTextPanelExit);
+        await presenter.InitializeAsync(view, model);
+        presenter.SubscribeOnEnter(onTextPanelEnter);
+        presenter.SubscribeOnExit(onTextPanelExit);
 
         if (depth > -1)
         {

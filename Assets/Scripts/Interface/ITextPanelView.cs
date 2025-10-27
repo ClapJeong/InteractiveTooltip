@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class ViewRectData
@@ -17,13 +16,11 @@ public class ViewRectData
         => new(Vector2.zero, Vector2.zero);
 }
 
-public interface ITextPanelView : ITextPanelLinkAcceser, ITextPanelDisplayController, IPointerEnterHandler, IPointerExitHandler
+public interface ITextPanelView : ITextPanelLinkAcceser, ITextPanelDisplayController, IPointerEnterHandler, IPointerExitHandler, IPointerSubscriber<ITextPanelPresenter>
 {
+    public void Initialize(ITextPanelPresenter presenter);
+
     public void SetRoot(Transform root);
 
     public void SetActive(bool active);
-
-    public void SubscribeOnPanelEnter(UnityAction<ITextPanelView> onPanelEnter);
-
-    public void SubscribeOnPanelExit(UnityAction<ITextPanelView> onPanelExit);
 }
