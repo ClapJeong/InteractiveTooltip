@@ -12,6 +12,7 @@ public enum TextDirection
 public interface ITextPanelLinkAcceser
 {
     public bool TryGetPointingLink(Vector2 mousePosition, out TMP_LinkInfo linkInfo);
+
     public Vector2 GetLinkScreenPosition(TMP_LinkInfo linkInfo, TextDirection direction);
 }
 
@@ -32,8 +33,7 @@ public interface ITextPanelPresenter : ITextPanelLinkAcceser, ITextPanelDisplayC
 {
     public UniTask InitializeAsync(
         ITextPanelView iView,
-        LinkData linkData,
-        int depth,
+        TextPanelModel model,
         UnityAction<ITextPanelPresenter> onPanelEnter,
         UnityAction<ITextPanelPresenter> onPanelExit);
 
@@ -56,5 +56,5 @@ public interface ITextPanelPresenter : ITextPanelLinkAcceser, ITextPanelDisplayC
     public int GetDepth();
     #endregion
 
-    public bool IsSameLink(string key);
+    public bool IsSameLink(LinkData linkData);
 }

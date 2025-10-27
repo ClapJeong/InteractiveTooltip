@@ -13,10 +13,10 @@ public class TextPanelModel
     private TextPanelAnchorState anchorState;
     public TextPanelAnchorState AnchorState => anchorState;
 
-    public TextPanelModel(string key, string text, int depth)
+    public TextPanelModel(LinkData linkData, int depth)
     {
-        this.key = key;
-        this.text = text;
+        this.key = linkData.Key;
+        this.text = linkData.Description;
         this.depth = depth;
         this.anchorState = TextPanelAnchorState.None;
     }

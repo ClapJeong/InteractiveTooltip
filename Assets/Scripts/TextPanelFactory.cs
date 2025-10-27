@@ -38,24 +38,23 @@ public class TextPanelFactory
 
     public async UniTask<ITextPanelPresenter> InitializeViewAsync(
         ITextPanelView view,
-        Vector2 pivot,
-        Vector2 position,
         LinkData linkData,
-        int depth)
+        int depth,
+        ViewRectData rectData)
     {
+        var model = new TextPanelModel(linkData, depth);
         var presenter = new BaseTextPanelPresenter();
         await presenter.InitializeAsync(
             view,
-            linkData,
-            depth,
+            model,
             onTextPanelEnter,
             onTextPanelExit);
 
         if (depth > -1)
         {
-            presenter.SetPivot(pivot);
+            presenter.SetPivot(rectData.pivot);
+            presenter.SetPosition(rectData.position);
             presenter.SetRoot(activeRoot);
-            presenter.SetPosition(position);
         }
         return presenter;
     }

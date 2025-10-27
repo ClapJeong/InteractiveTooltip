@@ -1,29 +1,29 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public interface ITextPanelView : IPointerEnterHandler, IPointerExitHandler
+public class ViewRectData
+{
+    public Vector2 pivot;
+    public Vector2 position;
+
+    public ViewRectData(Vector2 pivot, Vector2 position)
+    {
+        this.pivot = pivot;
+        this.position = position;
+    }
+
+    public static ViewRectData Empty
+        => new(Vector2.zero, Vector2.zero);
+}
+
+public interface ITextPanelView : ITextPanelLinkAcceser, ITextPanelDisplayController, IPointerEnterHandler, IPointerExitHandler
 {
     public void SetRoot(Transform root);
-
-    public void SetPosition(Vector2 position);
-
-    public void SetPivot(Vector2 anchor);
-
-    public void SetText(string text);
 
     public void SetActive(bool active);
 
     public void SubscribeOnPanelEnter(UnityAction<ITextPanelView> onPanelEnter);
 
     public void SubscribeOnPanelExit(UnityAction<ITextPanelView> onPanelExit);
-
-    public void SetAnchoringProgress(float normalizedValue);
-
-    public bool TryGetPointingLink(Vector2 mousePosition, out TMP_LinkInfo linkInfo);
-
-    public void RefreshRectTransform();
-
-    public Vector2 GetLinkScreenPosition(TMP_LinkInfo linkInfo, TextDirection direction);
 }

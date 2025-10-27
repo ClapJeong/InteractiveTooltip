@@ -21,7 +21,7 @@ public class BaseTextPanelView : MonoBehaviour, ITextPanelView
     public void SetText(string text)
         => textMeshProUGUI.text = text;
 
-    public void SetAnchoringProgress(float normalizedValue)
+    public void OnAnchorProgress(float normalizedValue)
         => progressImage.fillAmount = normalizedValue;
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -48,16 +48,10 @@ public class BaseTextPanelView : MonoBehaviour, ITextPanelView
     public bool TryGetPointingLink(Vector2 mousePosition, out TMP_LinkInfo linkInfo)
     {
         var linkIndex = TMP_TextUtilities.FindIntersectingLink(textMeshProUGUI, mousePosition, null);
-        if (linkIndex != -1)
-        {
-            linkInfo = textMeshProUGUI.textInfo.linkInfo[linkIndex];
-            return true;
-        }
-        else
-        {
-            linkInfo = new TMP_LinkInfo();
-            return false;
-        }
+        var isDetected = linkIndex > -1;
+        linkInfo = isDetected ? textMeshProUGUI.textInfo.linkInfo[linkIndex]
+                              : new TMP_LinkInfo();
+        return isDetected;
     }
 
     public void RefreshRectTransform()

@@ -42,9 +42,12 @@ public class TextPanelService
         deactiveViews.Enqueue(view);
     }
 
-    public async UniTask<ITextPanelPresenter> InitializeViewAsync(ITextPanelView view, Vector2 pivot, Vector2 position, LinkData linkData, int depth)
+    public async UniTask<ITextPanelPresenter> InitializeHierarchyViewAsync(ITextPanelView view, LinkData linkData)
+        => await InitializeViewAsync(view, linkData, -1, ViewRectData.Empty);
+
+    public async UniTask<ITextPanelPresenter> InitializeViewAsync(ITextPanelView view, LinkData linkData, int depth, ViewRectData rectData)
     {
-        var presenter = await factory.InitializeViewAsync(view, pivot, position, linkData, depth);
+        var presenter = await factory.InitializeViewAsync(view, linkData, depth, rectData);
         activePairs.Add(presenter, view);
         return presenter;
     }
@@ -70,7 +73,7 @@ public class TextPanelService
         var lehu = activePairs.Keys.Any(existPresenter =>
         {
             var sameDepth = existPresenter.GetDepth() == depth;
-            var sameLink = existPresenter.IsSameLink(linkData.Key);
+            var sameLink = existPresenter.IsSameLink(linkData);
             return sameDepth && sameLink;
         });
 

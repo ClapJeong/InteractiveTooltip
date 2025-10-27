@@ -55,7 +55,7 @@ public class MousePointDetector : MonoBehaviour
     {
         foreach (var defaultView in defaultTextPanelViews)
             if (linkDataSO.TryGetData(defaultView.defaultKey, out var linkData))
-                textPanelService.InitializeViewAsync(defaultView, Vector2.zero, Vector2.zero, linkData, -1).Forget();
+                textPanelService.InitializeHierarchyViewAsync(defaultView, linkData).Forget();
     }
 
     private void UpdatePointerDetecting()
@@ -76,19 +76,18 @@ public class MousePointDetector : MonoBehaviour
                 {
                     DeleteTextPanesOverDepth(newDepth);
 
-                    var position = presenter.GetLinkScreenPosition(linkInfo, TextDirection.Up);
+                    var pivot = new Vector2(0.5f, 0.0f);
                     var offset = new Vector2(0.0f, 10.0f);
-                    position += offset;
-                    CreateNewTextPanelAsync(linkData, newDepth, new Vector2(0.5f, 0.0f), position).Forget();
+                    var position = presenter.GetLinkScreenPosition(linkInfo, TextDirection.Up) + offset;
+                    var viewRectData = new ViewRectData(pivot, position);
+                    CreateNewTextPanelAsync(linkData, newDepth, viewRectData).Forget();
                     break;
                 }
             }
         }
 
         if (isAnyTextPanelDetected == false)
-        {
             OnFailedDetectingWord();
-        }
     }
 
     private void OnFailedDetectingWord()
@@ -115,8 +114,9 @@ public class MousePointDetector : MonoBehaviour
 
                     break;
 
-                case TextPanelAnchorState.PanelAnchored:
-                    break;
+                case TextPanelAnchorState.PanelAnchored: return;
+
+                default: throw new System.NotImplementedException();
             }
         }
     }
@@ -132,12 +132,12 @@ public class MousePointDetector : MonoBehaviour
         }
     }
 
-    private async UniTask CreateNewTextPanelAsync(LinkData linkData, int depth, Vector2 pivot, Vector2 position)
+    private async UniTask CreateNewTextPanelAsync(LinkData linkData, int depth, ViewRectData rectData)
     {
         var view = await textPanelService.GetViewAsync();
         view.SetRoot(deactiveRoot);
 
-        var presenter = await textPanelService.InitializeViewAsync(view, pivot, position, linkData, depth);
+        var presenter = await textPanelService.InitializeViewAsync(view, linkData, depth, rectData);
         presenter.RefreshRectTransform();
 
         timer.PlayTimer(presenter,

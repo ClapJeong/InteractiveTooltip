@@ -14,16 +14,16 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
 
     public async UniTask InitializeAsync(
         ITextPanelView iView,
-        LinkData linkData,
-        int depth,
+        TextPanelModel model,
         UnityAction<ITextPanelPresenter> onPanelEnter,
         UnityAction<ITextPanelPresenter> onPanelExit)
     {
         this.onPanelEnter = onPanelEnter;
         this.onPanelExit = onPanelExit;
+
+        this.model = model;
         this.view = iView;
-        model = new TextPanelModel(linkData.Key, linkData.Description, depth);
-        view.SetText(linkData.Description);
+        view.SetText(model.text);
         view.SetActive(true);
         view.SubscribeOnPanelEnter(OnPanelEnter);
         view.SubscribeOnPanelExit(OnPanelExit);
@@ -53,8 +53,8 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
     public void OnPanelExit(ITextPanelView view)
         => onPanelExit?.Invoke(this);
 
-    public bool IsSameLink(string key)
-        => model.key == key;
+    public bool IsSameLink(LinkData linkData)
+        => model.key == linkData.Key;
 
     public void SetPosition(Vector2 position)
         => view.SetPosition(position);
@@ -69,7 +69,7 @@ public class BaseTextPanelPresenter : ITextPanelPresenter
         => view.SetText(text);
 
     public void OnAnchorProgress(float normalizedValue)
-        => view.SetAnchoringProgress(normalizedValue);
+        => view.OnAnchorProgress(normalizedValue);
 
     public void RefreshRectTransform()
         => view.RefreshRectTransform();
