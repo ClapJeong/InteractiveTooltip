@@ -23,7 +23,6 @@ public class TextPanelFactory
         this.prefab = prefab;
         this.activeRoot = activeRoot;
         this.deactiveRoot = deactiveRoot;
-        this.onTextPanelExit = onTextPanelExit;
         this.onTextPanelEnter = onTextPanelEnter;
         this.onTextPanelExit = onTextPanelExit;
     }
