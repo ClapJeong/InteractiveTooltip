@@ -64,20 +64,21 @@ public class MousePointDetector : MonoBehaviour
         var mousePoint = Input.mousePosition;
         foreach (var presenter in textPanelService.GetEnablePresenters())
         {
-            if (presenter.TryGetPointingLink(mousePoint, out var linkInfo) && //포인트한 곳에 링크가 있음
-               linkDataSO.TryGetData(linkInfo.GetLinkID(), out var linkData)) //해당 링크에 대한 데이터가 있음
+            if (presenter.TryGetPointingLink(mousePoint, out var linkInfo) &&
+               linkDataSO.TryGetData(linkInfo.GetLinkID(), out var linkData))
             {
                 isAnyTextPanelDetected = true;
-                //새로 만들 뎁스에 이미 링크에 관한 패널이 있으면 아무것도 안함
-                //새로 만들 뎁스에 링크에 관한 패널이 없으면 그거랑 그 이상 패널들 지우고 새로 만들기
+
                 var newDepth = presenter.GetDepth() + 1;
                 var hasPanel = textPanelService.HasTextPanel(newDepth, linkData);
-                Debug.Log($"{Time.frameCount} hasPanel: {hasPanel}");
+
                 if (!hasPanel)
                 {
                     DeleteTextPanesOverDepth(newDepth);
 
                     var position = presenter.GetLinkScreenPosition(linkInfo, TextDirection.Up);
+                    var offset = new Vector2(0.0f, 10.0f);
+                    position += offset;
                     CreateNewTextPanelAsync(linkData, newDepth, new Vector2(0.5f, 0.0f), position).Forget();
                     break;
                 }
@@ -103,11 +104,13 @@ public class MousePointDetector : MonoBehaviour
                 case TextPanelAnchorState.WordAnchored:
                     {
                         if (timer.HasTimer(topPresenter) == false)
+                        {
                             timer.PlayTimer(topPresenter,
                                                     exitingDuration,
-                                                    null,
-                                                    () => textPanelService.Release(topPresenter),
-                                                    null);
+                                                    onProgress: null,
+                                                    onComplete: () => textPanelService.Release(topPresenter),
+                                                    onCanceled: null);
+                        }
                     }
 
                     break;
@@ -151,32 +154,30 @@ public class MousePointDetector : MonoBehaviour
 
     private void OnWordAnchorCancled(ITextPanelPresenter presenter)
     {
-        Debug.Log("Anchoring Canceled!");
+
     }
 
     private void OnPointEnterTextPanel(ITextPanelPresenter presenter)
     {
-        enteredPresenter = presenter;
+        if (presenter.GetDepth() > -1)
+            enteredPresenter = presenter;
     }
 
     private void OnPointExitTextPanel(ITextPanelPresenter presenter)
     {
-        exitedPresenter = presenter;
+        if (presenter.GetDepth() > -1)
+            exitedPresenter = presenter;
     }
 
     private void UpdatePanelEnterExit()
     {
-        if (enteredPresenter != null)
+        if (enteredPresenter != null &&
+            timer.HasTimer(enteredPresenter))
         {
-            if (enteredPresenter.GetDepth() > -1 &&
-                timer.HasTimer(enteredPresenter))
-            {
-                timer.CancelTimer(enteredPresenter);
-                enteredPresenter.SetAnchorState(TextPanelAnchorState.PanelAnchored);
-            }
+            timer.CancelTimer(enteredPresenter);
+            enteredPresenter.SetAnchorState(TextPanelAnchorState.PanelAnchored);
         }
         else if (exitedPresenter != null &&
-                 exitedPresenter.GetDepth() > -1 &&
                  enteredPresenter == null)
         {
             DeleteTextPanesOverDepth(exitedPresenter.GetDepth());

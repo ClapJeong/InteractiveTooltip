@@ -36,7 +36,6 @@ public class TextPanelService
 
     public void Release(ITextPanelPresenter presenter, Transform root = null)
     {
-        Debug.Log($"{Time.frameCount} release");
         factory.Release(presenter, root);
         var view = activePairs[presenter];
         activePairs.Remove(presenter);
@@ -72,7 +71,6 @@ public class TextPanelService
         {
             var sameDepth = existPresenter.GetDepth() == depth;
             var sameLink = existPresenter.IsSameLink(linkData.Key);
-            //Debug.Log($"sameDepth: {sameDepth} , linkData: {sameLink}");
             return sameDepth && sameLink;
         });
 
